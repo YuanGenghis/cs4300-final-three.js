@@ -1,4 +1,4 @@
-let renderer, canvas, scene, camera
+let renderer, canvas, scene, camera, amlight, light
 
 
 
@@ -37,11 +37,15 @@ const init = () => {
     document.getElementById("ctx").onchange = event => updateCameraPosition(event, "x")
     document.getElementById("cty").onchange = event => updateCameraPosition(event, "y")
     document.getElementById("ctz").onchange = event => updateCameraPosition(event, "z")
+    document.getElementById("ami").onclick = event  => updateLight(event,"ami")
+    document.getElementById("dir").onclick = event  => updateLight(event,"dir")
 
     // lights
     // scene.add( new THREE.AmbientLight( 0x00ff00 ) );
+    amlight = new THREE.AmbientLight( 0x00ff00 );
+    scene.add(amlight);
 
-    const light = new THREE.DirectionalLight( 0xdfebff, 1 );
+    light = new THREE.DirectionalLight( 0xdfebff, 1 );
     light.position.set( 50, 200, 100 );
     light.position.multiplyScalar( 1.3 );
 
@@ -171,4 +175,13 @@ const addShape = () => {
                                                                     alphaTest: 0.5} );
     }
     render();
+}
+
+const updateLight = (event,type) => {
+    if (type === "ami") {
+        amlight.visible = !amlight.visible;
+    }
+    if (type === "dir") {
+        light.visible = !light.visible;
+    }
 }
