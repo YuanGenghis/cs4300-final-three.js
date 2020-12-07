@@ -6,19 +6,40 @@ const SPHERE = "SPHERE"
 const CUBE = "CUBE"
 
 
+const OBJLoader2Example = function ( elementToBindTo ) {
+    this.aspectRatio = 1;
+    this.controls = null;
+};
+
+OBJLoader2Example.prototype = {
+
+    constructor: OBJLoader2Example,
+
+    initGL: function () {
+        this.controls = new TrackballControls(this.camera, this.renderer.domElement);
+        const helper = new THREE.GridHelper(1200, 60, 0xFF4444, 0x404040);
+        this.scene.add(helper);
+    },
+}
+
 
 const init = () => {
+
     canvas = document.getElementById('canvas')
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xCCE0FF);
     scene.fog = new THREE.Fog( 0xcce0ff, 500, 10000 );
 
-    camera = new THREE.PerspectiveCamera( 100, 1000 / 500, 0.1, 200 );
+    camera = new THREE.PerspectiveCamera( 120, 1000/500, 1, 200  );
     camera.position.set( 0, 3, 5 );
     scene.add( camera );
-   // lights
 
-    scene.add( new THREE.AmbientLight( 0x00ff00 ) );
+    document.getElementById("ctx").onchange = event => updateCameraPosition(event, "x")
+    document.getElementById("cty").onchange = event => updateCameraPosition(event, "y")
+    document.getElementById("ctz").onchange = event => updateCameraPosition(event, "z")
+
+    // lights
+    // scene.add( new THREE.AmbientLight( 0x00ff00 ) );
 
     const light = new THREE.DirectionalLight( 0xdfebff, 1 );
     light.position.set( 50, 200, 100 );
@@ -47,33 +68,79 @@ const init = () => {
 
     renderer.shadowMap.enabled = true;
 
-    const geometry = new THREE.BoxBufferGeometry(20,0.1,20);
-    const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    const cube = new THREE.Mesh( geometry, material );
-    scene.add( cube );
 
-    const loader = new THREE.TextureLoader();
-    const grassTexture = loader.load('textures/Grass.png');
-    const grassMaterial = new THREE.MeshLambertMaterial( {
-                                                             map: grassTexture,
+    const groundGeometry = new THREE.BoxBufferGeometry(20,0.4,10);
+    const grassMaterial = new THREE.MeshLambertMaterial( { map:grassTexture,
                                                              side: THREE.DoubleSide,
-                                                             alphaTest: 0.5
-                                                         } );
-    const grassMesh = new THREE.Mesh(geometry, grassMaterial);
-    scene.add(grassMesh);
+                                                             alphaTest: 0.5} );
 
-    const SphereGeometry = new THREE.SphereGeometry( 1, 32, 32 );
-    const SphereMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff} );
-    const sphere = new THREE.Mesh( SphereGeometry, SphereMaterial );
-    sphere.position.set(0, 1, 0);
-    scene.add( sphere );
+    let ground = new THREE.Mesh(groundGeometry, grassMaterial);
+    ground.position.set(0, 0, 0);
+    scene.add(ground);
 
 
-    render();
+    const ballGeometry = new THREE.SphereGeometry( 1, 32, 32 );
+    const ballMaterial = new THREE.MeshLambertMaterial( {map:footballTexture,
+                                                            side: THREE.DoubleSide,
+                                                            alphaTest: 0.5} );
 
+    let ball = new THREE.Mesh( ballGeometry, ballMaterial );
+    ball.position.set(0, 1, 0);
+    ball.castShadow = true;
+    scene.add( ball );
+
+    ball.customDepthMaterial = new THREE.MeshDepthMaterial( {
+                                                                  depthPacking: THREE.RGBADepthPacking,
+                                                                  map: footballTexture,
+                                                                  alphaTest: 0.5
+                                                              } );
+
+
+
+    // const objLoader2 = new OBJLoader2();
+    // const name = "bench";
+    //
+    // const callbackOnLoad = function ( object3d ) {
+    //
+    //     scope.scene.add( object3d );
+    //     console.log( 'Loading complete: ' + name);
+    //     scope._reportProgress( { detail: { text: '' } } );
+    //
+    //     objLoader2.load( 'textures/bench.obj', callbackOnLoad, null, null, null );
+    //
+    // };
+
+
+    const animate = function () {
+        requestAnimationFrame( animate );
+
+        ball.rotation.x += 0.01;
+        ball.rotation.y += 0.01;
+
+        render();
+    };
+    animate();
 }
+
+// const app = new OBJLoader2Example( document.getElementById( 'canvas' ) );
 
 function render() {
     renderer.render(scene, camera);
+    // app.render();
 
+}
+
+const updateCameraPosition = (event, axis) => {
+    if (axis === "x") {
+        camera.position.setX(event.target.value);
+    }
+    else if (axis === "y") {
+        camera.position.setY(event.target.value);
+    }
+    else if (axis === "z") {
+        camera.position.setZ(event.target.value);
+    }
+    camera.updateProjectionMatrix();
+
+    render();
 }

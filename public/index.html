@@ -3,6 +3,9 @@
 <head>
     <title>My first three.js app</title>
     <script src='three.js/build/three.js' type="application/javascript"></script>
+    <script type="module"
+            src='three.js/examples/jsm/loaders/OBJLoader2.js'> </script>
+    <script src='textures/textures.js' type="application/javascript"></script>
     <style>
         body { margin: 0; }
         canvas {border: 1px solid gray;}
@@ -11,5 +14,11 @@
 <body onload="init()">
 <canvas id="canvas" width="1000px" height="500px"></canvas>
 <script src="graphic/graphics.js"></script>
+
+<h2>Camera Translation</h2>
+X: <input id="ctx" type="range" value="0" min="-1" max="1" step="0.1"/>
+Y: <input id="cty" type="range" value="0" min="-1" max="1" step="0.1"/>
+Z: <input id="ctz" type="range" value="0" min="-1" max="1" step="0.1"/>
+
 </body>
 </html>
