@@ -155,7 +155,7 @@ const addShape = () => {
     let py = document.getElementById('py').value
     let pz = document.getElementById('pz').value
     if (shapeType === "CUBE") {
-        const benchGeometry = new THREE.BoxBufferGeometry(1,1,2);
+        const benchGeometry = new THREE.BoxBufferGeometry(2,2,2);
         const benchMaterial = new THREE.MeshBasicMaterial({color:0x806f6e});
         const bench = new THREE.Mesh(benchGeometry, benchMaterial);
         bench.position.set(px,py,pz);
