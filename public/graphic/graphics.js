@@ -69,13 +69,13 @@ const init = () => {
     renderer.shadowMap.enabled = true;
 
 
-    const groundGeometry = new THREE.BoxBufferGeometry(20,0.4,10);
-    const grassMaterial = new THREE.MeshLambertMaterial( { map:grassTexture,
-                                                             side: THREE.DoubleSide,
-                                                             alphaTest: 0.5} );
+    // const groundGeometry = new THREE.BoxBufferGeometry(20,0.4,10);
+    const grassMaterial = new THREE.MeshLambertMaterial( { map:grassTexture} );
 
-    let ground = new THREE.Mesh(groundGeometry, grassMaterial);
+    let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry( 20, 20 ), grassMaterial);
+    ground.rotation.x = - Math.PI / 2;
     ground.position.set(0, 0, 0);
+    ground.receiveShadow = true;
     scene.add(ground);
 
 
@@ -142,5 +142,33 @@ const updateCameraPosition = (event, axis) => {
     }
     camera.updateProjectionMatrix();
 
+    render();
+}
+
+const addShape = () => {
+    const shapeType =document.querySelector("input[name='shape']:checked").value
+    let px = document.getElementById('px').value
+    let py = document.getElementById('py').value
+    let pz = document.getElementById('pz').value
+    if (shapeType === "CUBE") {
+        const benchGeometry = new THREE.BoxBufferGeometry(1,1,2);
+        const benchMaterial = new THREE.MeshBasicMaterial({color:0x806f6e});
+        const bench = new THREE.Mesh(benchGeometry, benchMaterial);
+        bench.position.set(px,py,pz);
+        scene.add(bench);
+    } else if (shapeType === "SPHERE") {
+        const addBallGeometry = new THREE.SphereGeometry( 0.5, 32, 32 );
+        const newBallMaterial = new THREE.MeshLambertMaterial( {map:footballTexture,
+                                                                side: THREE.DoubleSide,
+                                                                alphaTest: 0.5} );
+        let newball = new THREE.Mesh( addBallGeometry, newBallMaterial );
+        newball.position.set(px, py, pz);
+        newball.castShadow = true;
+        scene.add( newball );
+        newball.customDepthMaterial = new THREE.MeshDepthMaterial( {
+                                                                    depthPacking: THREE.RGBADepthPacking,
+                                                                    map: footballTexture,
+                                                                    alphaTest: 0.5} );
+    }
     render();
 }

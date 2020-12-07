@@ -16,9 +16,30 @@
 <script src="graphic/graphics.js"></script>
 
 <h2>Camera Translation</h2>
-X: <input id="ctx" type="range" value="0" min="-1" max="1" step="0.1"/>
-Y: <input id="cty" type="range" value="0" min="-1" max="1" step="0.1"/>
-Z: <input id="ctz" type="range" value="0" min="-1" max="1" step="0.1"/>
+X: <input id="ctx" type="range" value="0" min="-10" max="10" step="0.1"/>
+Y: <input id="cty" type="range" value="0" min="-10" max="10" step="0.1"/>
+Z: <input id="ctz" type="range" value="0" min="-10" max="10" step="0.1"/>
+
+<h2>Position</h2>
+X: <input id="px" type="number" value="0">
+Y: <input id="py" type="number" value="0">
+Z: <input id="pz" type="number" value="0">
+
+<label>
+    <input type="radio" name="shape"
+           value="CUBE"/>
+    Bench
+</label>
+
+<label>
+    <input type="radio" name="shape"
+           value="SPHERE"/>
+    Ball
+</label>
+<button onclick="addShape()">
+    Add
+</button>
+
 
 </body>
 </html>
