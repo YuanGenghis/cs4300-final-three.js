@@ -1,26 +1,10 @@
 let renderer, canvas, scene, camera, amlight, light
 
 
-
 const SPHERE = "SPHERE"
 const CUBE = "CUBE"
 
-
-const OBJLoader2Example = function ( elementToBindTo ) {
-    this.aspectRatio = 1;
-    this.controls = null;
-};
-
-OBJLoader2Example.prototype = {
-
-    constructor: OBJLoader2Example,
-
-    initGL: function () {
-        this.controls = new TrackballControls(this.camera, this.renderer.domElement);
-        const helper = new THREE.GridHelper(1200, 60, 0xFF4444, 0x404040);
-        this.scene.add(helper);
-    },
-}
+let objList = []
 
 
 const init = () => {
@@ -30,8 +14,8 @@ const init = () => {
     scene.background = new THREE.Color( 0xCCE0FF);
     scene.fog = new THREE.Fog( 0xcce0ff, 500, 10000 );
 
-    camera = new THREE.PerspectiveCamera( 120, 1000/500, 1, 200  );
-    camera.position.set( 0, 3, 5 );
+    camera = new THREE.PerspectiveCamera( 120, window.innerWidth / window.innerHeight, 1, 200  );
+    camera.position.set( 0, 3, 5);
     scene.add( camera );
 
     document.getElementById("ctx").onchange = event => updateCameraPosition(event, "x")
@@ -41,9 +25,9 @@ const init = () => {
     document.getElementById("dir").onclick = event  => updateLight(event,"dir")
 
     // lights
-    // scene.add( new THREE.AmbientLight( 0x00ff00 ) );
-    amlight = new THREE.AmbientLight( 0x00ff00 );
+    amlight = new THREE.AmbientLight( 0xfff2e6 );
     scene.add(amlight);
+    amlight.visible = !amlight.visible;
 
     light = new THREE.DirectionalLight( 0xdfebff, 1 );
     light.position.set( 50, 200, 100 );
@@ -83,36 +67,21 @@ const init = () => {
     scene.add(ground);
 
 
-    const ballGeometry = new THREE.SphereGeometry( 1, 32, 32 );
+    const ballGeometry = new THREE.SphereGeometry( 0.4, 32, 32 );
     const ballMaterial = new THREE.MeshLambertMaterial( {map:footballTexture,
                                                             side: THREE.DoubleSide,
                                                             alphaTest: 0.5} );
 
     let ball = new THREE.Mesh( ballGeometry, ballMaterial );
-    ball.position.set(0, 1, 0);
+    ball.position.set(0, 0.4, 0);
     ball.castShadow = true;
     scene.add( ball );
 
     ball.customDepthMaterial = new THREE.MeshDepthMaterial( {
-                                                                  depthPacking: THREE.RGBADepthPacking,
-                                                                  map: footballTexture,
-                                                                  alphaTest: 0.5
-                                                              } );
-
-
-
-    // const objLoader2 = new OBJLoader2();
-    // const name = "bench";
-    //
-    // const callbackOnLoad = function ( object3d ) {
-    //
-    //     scope.scene.add( object3d );
-    //     console.log( 'Loading complete: ' + name);
-    //     scope._reportProgress( { detail: { text: '' } } );
-    //
-    //     objLoader2.load( 'textures/bench.obj', callbackOnLoad, null, null, null );
-    //
-    // };
+                                                                depthPacking: THREE.RGBADepthPacking,
+                                                                map: footballTexture,
+                                                                alphaTest: 0.5
+                                                            } );
 
 
     const animate = function () {
@@ -126,12 +95,9 @@ const init = () => {
     animate();
 }
 
-// const app = new OBJLoader2Example( document.getElementById( 'canvas' ) );
-
 function render() {
     renderer.render(scene, camera);
     // app.render();
-
 }
 
 const updateCameraPosition = (event, axis) => {
@@ -149,7 +115,7 @@ const updateCameraPosition = (event, axis) => {
     render();
 }
 
-const addShape = () => {
+const addShape = () =>{
     const shapeType =document.querySelector("input[name='shape']:checked").value
     let px = document.getElementById('px').value
     let py = document.getElementById('py').value
@@ -161,18 +127,19 @@ const addShape = () => {
         bench.position.set(px,py,pz);
         scene.add(bench);
     } else if (shapeType === "SPHERE") {
-        const addBallGeometry = new THREE.SphereGeometry( 0.5, 32, 32 );
+        const addBallGeometry = new THREE.SphereGeometry( 0.4, 32, 32 );
         const newBallMaterial = new THREE.MeshLambertMaterial( {map:footballTexture,
-                                                                side: THREE.DoubleSide,
-                                                                alphaTest: 0.5} );
+                                                                   side: THREE.DoubleSide,
+                                                                   alphaTest: 0.4} );
         let newball = new THREE.Mesh( addBallGeometry, newBallMaterial );
         newball.position.set(px, py, pz);
         newball.castShadow = true;
         scene.add( newball );
+        
         newball.customDepthMaterial = new THREE.MeshDepthMaterial( {
-                                                                    depthPacking: THREE.RGBADepthPacking,
-                                                                    map: footballTexture,
-                                                                    alphaTest: 0.5} );
+                                                                       depthPacking: THREE.RGBADepthPacking,
+                                                                       map: footballTexture,
+                                                                       alphaTest: 0.5} );
     }
     render();
 }
