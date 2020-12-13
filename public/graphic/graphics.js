@@ -6,6 +6,7 @@ const CUBE = "CUBE"
 
 let objList = []
 
+let objIndex = 0;
 
 const init = () => {
 
@@ -100,16 +101,16 @@ const init = () => {
 
 const render = () => {
     const $list = $("#object-list")
-    objList.forEach((obj, index) => {
+    $list.empty()
+    objList.forEach((obj) => {
         const $li = $(`
         <li>
-        <label>
-        <h2>
+        <label> 
         ${obj}
-        </h2>
-        <button onclick="deleteShape(${obj})">
+        <button onclick="deleteShape('${obj}')">
           Delete
         </button>
+        </label>
         </li>
         `)
         $list.append($li);
@@ -118,14 +119,22 @@ const render = () => {
 }
 
 function deleteShape(name) {
+    alert("here");
     removeObj(objList, name);
-    scene.remove(name);
+    const obj = scene.getObjectByName(name);
+    scene.remove(obj);
 }
 
 function removeObj(arr, name) {
-    return arr.filter(function(ele){
-        return ele !== name;
-    });
+    var index = 0;
+    var temp = 0;
+    arr.forEach((obj) => {
+        if(obj === name) {
+            temp = index;
+        }
+        index++;
+    })
+    delete arr[temp];
 }
 
 const updateCameraPosition = (event, axis) => {
@@ -153,6 +162,10 @@ const addShape = () =>{
         const benchMaterial = new THREE.MeshBasicMaterial({color:0x806f6e});
         const bench = new THREE.Mesh(benchGeometry, benchMaterial);
         bench.position.set(px,py,pz);
+        objIndex++;
+        ObjName = "cube" + objIndex;
+        bench.name = ObjName;
+        objList.push(ObjName);
         scene.add(bench);
     } else if (shapeType === "SPHERE") {
         const addBallGeometry = new THREE.SphereGeometry( 0.4, 32, 32 );
@@ -162,12 +175,16 @@ const addShape = () =>{
         let newball = new THREE.Mesh( addBallGeometry, newBallMaterial );
         newball.position.set(px, py, pz);
         newball.castShadow = true;
-        scene.add( newball );
-
+        objIndex++;
+        ObjName = "sphere" + objIndex;
+        newball.name = ObjName;
+        objList.push(ObjName);
         newball.customDepthMaterial = new THREE.MeshDepthMaterial( {
                                                                        depthPacking: THREE.RGBADepthPacking,
                                                                        map: footballTexture,
                                                                        alphaTest: 0.5} );
+
+        scene.add( newball );
     }
     render();
 }
