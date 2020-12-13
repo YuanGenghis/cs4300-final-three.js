@@ -75,6 +75,8 @@ const init = () => {
     let ball = new THREE.Mesh( ballGeometry, ballMaterial );
     ball.position.set(0, 0.4, 0);
     ball.castShadow = true;
+    ball.name = "ball1";
+    objList.push("ball1");
     scene.add( ball );
 
     ball.customDepthMaterial = new THREE.MeshDepthMaterial( {
@@ -95,9 +97,35 @@ const init = () => {
     animate();
 }
 
-function render() {
+
+const render = () => {
+    const $list = $("#object-list")
+    objList.forEach((obj, index) => {
+        const $li = $(`
+        <li>
+        <label>
+        <h2>
+        ${obj}
+        </h2>
+        <button onclick="deleteShape(${obj})">
+          Delete
+        </button>
+        </li>
+        `)
+        $list.append($li);
+    })
     renderer.render(scene, camera);
-    // app.render();
+}
+
+function deleteShape(name) {
+    removeObj(objList, name);
+    scene.remove(name);
+}
+
+function removeObj(arr, name) {
+    return arr.filter(function(ele){
+        return ele !== name;
+    });
 }
 
 const updateCameraPosition = (event, axis) => {
@@ -135,7 +163,7 @@ const addShape = () =>{
         newball.position.set(px, py, pz);
         newball.castShadow = true;
         scene.add( newball );
-        
+
         newball.customDepthMaterial = new THREE.MeshDepthMaterial( {
                                                                        depthPacking: THREE.RGBADepthPacking,
                                                                        map: footballTexture,
