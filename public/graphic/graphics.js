@@ -129,7 +129,7 @@ const render = () => {
         <label> 
         ${obj}
         <button onclick="deleteShape('${obj}')">
-          Delete
+          DeleteShape
         </button>
         </label>
         </li>
@@ -141,7 +141,7 @@ const render = () => {
 
 
 function deleteShape(name) {
-    alert("here");
+    alert("delete!");
     removeObj(objList, name);
     const obj = scene.getObjectByName(name);
     scene.remove(obj);
