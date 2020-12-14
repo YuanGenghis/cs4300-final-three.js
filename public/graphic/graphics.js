@@ -18,8 +18,9 @@ const init = () => {
     scene.background = new THREE.Color( 0xCCE0FF);
     scene.fog = new THREE.Fog( 0xcce0ff, 500, 10000 );
 
-    camera = new THREE.PerspectiveCamera( 120, window.innerWidth / window.innerHeight, 1, 200  );
-    camera.position.set( 0, 3, 5);
+    camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 200  );
+    camera.position.set( 0, 10, 20);
+    camera.lookAt(scene.position);
     scene.add( camera );
 
     document.getElementById("ctx").onchange = event => updateCameraPosition(event, "x")
@@ -31,6 +32,8 @@ const init = () => {
 
     // lights
     amlight = new THREE.AmbientLight( 0xfff2e6 );
+    amlight.castShadow = true;
+
     scene.add(amlight);
     amlight.visible = !amlight.visible;
 
@@ -40,12 +43,12 @@ const init = () => {
 
     light.castShadow = true;
 
-    light.shadow.mapSize.width = 1024;
-    light.shadow.mapSize.height = 1024;
+    light.shadow.mapSize.width = 5000;
+    light.shadow.mapSize.height = 5000;
 
     const d = 300;
 
-    light.shadow.camera.left = - d;
+    light.shadow.camera.left =  - d;
     light.shadow.camera.right = d;
     light.shadow.camera.top = d;
     light.shadow.camera.bottom = - d;
@@ -58,8 +61,9 @@ const init = () => {
     renderer.setClearColor(0xfffffff, 1);
     renderer.setSize(canvas.width, canvas.height);
     renderer.outputEncoding = THREE.sRGBEncoding;
-
     renderer.shadowMap.enabled = true;
+
+
 
 
     // const groundGeometry = new THREE.BoxBufferGeometry(20,0.4,10);
@@ -89,6 +93,19 @@ const init = () => {
                                                                 map: footballTexture,
                                                                 alphaTest: 0.5
                                                             } );
+
+    const boxGeometry = new THREE.BoxBufferGeometry(2,2,2);
+    const boxMaterial = new THREE.MeshLambertMaterial( {map:yellowTexture,
+                                                         side: THREE.DoubleSide,
+                                                         alphaTest: 0.4} );
+    const box = new THREE.Mesh(boxGeometry, boxMaterial);
+    box.position.set(3, 1, 0);
+    box.castShadow = true;
+    objIndex++;
+    ObjName = "cube" + objIndex;
+    box.name = ObjName;
+    objList.push(ObjName);
+    scene.add(box);
 
 
     const animate = function () {
@@ -121,6 +138,7 @@ const render = () => {
     })
     renderer.render(scene, camera);
 }
+
 
 function deleteShape(name) {
     alert("here");
@@ -163,18 +181,17 @@ const addShape = () =>{
         // const benchMaterial = new THREE.MeshBasicMaterial({color:0x806f6e});
         let boxMaterial
         if (boxTex === "blue") {
-            alert("blue");
             boxMaterial = new THREE.MeshLambertMaterial( {map:blueTexture,
                                                              side: THREE.DoubleSide,
                                                              alphaTest: 0.4} );
         } else {
-            alert("yellow");
             boxMaterial = new THREE.MeshLambertMaterial( {map:yellowTexture,
                                                              side: THREE.DoubleSide,
                                                              alphaTest: 0.4} );
         }
         const box = new THREE.Mesh(benchGeometry, boxMaterial);
         box.position.set(px,py,pz);
+        box.castShadow = true;
         objIndex++;
         ObjName = "cube" + objIndex;
         box.name = ObjName;
@@ -184,12 +201,10 @@ const addShape = () =>{
         const addBallGeometry = new THREE.SphereGeometry( 0.4, 32, 32 );
         let newBallMaterial;
         if (ballTexture === "basketball") {
-            alert("basket")
             newBallMaterial = new THREE.MeshLambertMaterial( {map:basketballTexture,
                                                                  side: THREE.DoubleSide,
                                                                  alphaTest: 0.4} );
         } else {
-            alert("foot")
             newBallMaterial = new THREE.MeshLambertMaterial( {map:footballTexture,
                                                                        side: THREE.DoubleSide,
                                                                        alphaTest: 0.4} );

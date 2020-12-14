@@ -89,6 +89,8 @@ Z: <input id="pz" type="number" value="0">
 
 <script type="module">
     import {OBJLoader} from "./three.js/examples/jsm/loaders/OBJLoader.js";
+    import {OrbitControls} from "./three.js/examples/jsm/controls/OrbitControls.js";
+    let controls
 
     const objLoader = new OBJLoader();
     objLoader.load('textures/bench.obj', function (object) {
@@ -116,7 +118,9 @@ Z: <input id="pz" type="number" value="0">
         object.castShadow = true;
         scene.add(object);
     });
+
 </script>
+
 
 
 </body>
