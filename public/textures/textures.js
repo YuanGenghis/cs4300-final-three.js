@@ -11,5 +11,15 @@ grassTexture.encoding = THREE.sRGBEncoding;
 let football = 'textures/football2.jpg';
 let footballTexture = loader.load(football);
 
+let basketball = 'textures/basketball.png';
+let basketballTexture = loader.load(basketball);
+
+let blueBox = 'textures/blue.jpg';
+let blueTexture = loader.load(blueBox);
+
+let yellowBox = 'textures/yellow.jpg';
+let yellowTexture = loader.load(yellowBox);
+
+
 
 

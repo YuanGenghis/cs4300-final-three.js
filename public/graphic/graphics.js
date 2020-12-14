@@ -8,6 +8,9 @@ let objList = []
 
 let objIndex = 0;
 
+let ballTexture;
+let boxTex;
+
 const init = () => {
 
     canvas = document.getElementById('canvas')
@@ -24,6 +27,7 @@ const init = () => {
     document.getElementById("ctz").onchange = event => updateCameraPosition(event, "z")
     document.getElementById("ami").onclick = event  => updateLight(event,"ami")
     document.getElementById("dir").onclick = event  => updateLight(event,"dir")
+
 
     // lights
     amlight = new THREE.AmbientLight( 0xfff2e6 );
@@ -126,15 +130,10 @@ function deleteShape(name) {
 }
 
 function removeObj(arr, name) {
-    var index = 0;
-    var temp = 0;
-    arr.forEach((obj) => {
-        if(obj === name) {
-            temp = index;
-        }
-        index++;
-    })
-    delete arr[temp];
+    const index = arr.indexOf(name);
+    if (index > -1) {
+        arr.splice(index, 1);
+    }
 }
 
 const updateCameraPosition = (event, axis) => {
@@ -153,25 +152,49 @@ const updateCameraPosition = (event, axis) => {
 }
 
 const addShape = () =>{
+    ballTexture = document.getElementById("sel").value
+    boxTex = document.getElementById("sel2").value
     const shapeType =document.querySelector("input[name='shape']:checked").value
     let px = document.getElementById('px').value
     let py = document.getElementById('py').value
     let pz = document.getElementById('pz').value
     if (shapeType === "CUBE") {
         const benchGeometry = new THREE.BoxBufferGeometry(2,2,2);
-        const benchMaterial = new THREE.MeshBasicMaterial({color:0x806f6e});
-        const bench = new THREE.Mesh(benchGeometry, benchMaterial);
-        bench.position.set(px,py,pz);
+        // const benchMaterial = new THREE.MeshBasicMaterial({color:0x806f6e});
+        let boxMaterial
+        if (boxTex === "blue") {
+            alert("blue");
+            boxMaterial = new THREE.MeshLambertMaterial( {map:blueTexture,
+                                                             side: THREE.DoubleSide,
+                                                             alphaTest: 0.4} );
+        } else {
+            alert("yellow");
+            boxMaterial = new THREE.MeshLambertMaterial( {map:yellowTexture,
+                                                             side: THREE.DoubleSide,
+                                                             alphaTest: 0.4} );
+        }
+        const box = new THREE.Mesh(benchGeometry, boxMaterial);
+        box.position.set(px,py,pz);
         objIndex++;
         ObjName = "cube" + objIndex;
-        bench.name = ObjName;
+        box.name = ObjName;
         objList.push(ObjName);
-        scene.add(bench);
+        scene.add(box);
     } else if (shapeType === "SPHERE") {
         const addBallGeometry = new THREE.SphereGeometry( 0.4, 32, 32 );
-        const newBallMaterial = new THREE.MeshLambertMaterial( {map:footballTexture,
-                                                                   side: THREE.DoubleSide,
-                                                                   alphaTest: 0.4} );
+        let newBallMaterial;
+        if (ballTexture === "basketball") {
+            alert("basket")
+            newBallMaterial = new THREE.MeshLambertMaterial( {map:basketballTexture,
+                                                                 side: THREE.DoubleSide,
+                                                                 alphaTest: 0.4} );
+        } else {
+            alert("foot")
+            newBallMaterial = new THREE.MeshLambertMaterial( {map:footballTexture,
+                                                                       side: THREE.DoubleSide,
+                                                                       alphaTest: 0.4} );
+        }
+
         let newball = new THREE.Mesh( addBallGeometry, newBallMaterial );
         newball.position.set(px, py, pz);
         newball.castShadow = true;

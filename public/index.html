@@ -51,16 +51,32 @@ X: <input id="px" type="number" value="0">
 Y: <input id="py" type="number" value="0">
 Z: <input id="pz" type="number" value="0">
 
-<label>
-    <input type="radio" name="shape"
-           value="CUBE"/>
-    Box
-</label>
+<h2>Ball and Texture</h2>
+<select id="sel">
+    <option value="basketball">basketball</option>
+    <option value="football">football</option>
+</select>
 
 <label>
     <input type="radio" name="shape"
            value="SPHERE"/>
     Ball
+</label>
+<button onclick="addShape()">
+    Add
+</button>
+
+
+<h2>Box and Texture</h2>
+<select id="sel2">
+    <option value="blue">BlueBox</option>
+    <option value="yellow">YellowBox</option>
+</select>
+
+<label>
+    <input type="radio" name="shape"
+           value="CUBE"/>
+    Box
 </label>
 <button onclick="addShape()">
     Add
